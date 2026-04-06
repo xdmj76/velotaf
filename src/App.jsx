@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Home, Calendar as CalendarIcon, Settings as SettingsIcon } from 'lucide-react'
+import { Home, Calendar as CalendarIcon, Settings as SettingsIcon, List as ListIcon } from 'lucide-react'
 import HomeView from './views/Home'
 import CalendarView from './views/Calendar'
 import SettingsView from './views/Settings'
+import HistoryView from './views/History'
 import { useCommuteData } from './hooks/useCommuteData'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
   const renderView = () => {
     switch (currentTab) {
       case 'home': return <HomeView commuteData={commuteData} />
+      case 'list': return <HistoryView commuteData={commuteData} />
       case 'calendar': return <CalendarView commuteData={commuteData} />
       case 'settings': return <SettingsView commuteData={commuteData} />
       default: return <HomeView commuteData={commuteData} />
@@ -44,6 +46,12 @@ function App() {
           label="Aujourd'hui" 
           isActive={currentTab === 'home'} 
           onClick={() => setCurrentTab('home')} 
+        />
+        <NavItem 
+          icon={<ListIcon size={26} />} 
+          label="Historique" 
+          isActive={currentTab === 'list'} 
+          onClick={() => setCurrentTab('list')} 
         />
         <NavItem 
           icon={<CalendarIcon size={26} />} 
