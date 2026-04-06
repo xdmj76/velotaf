@@ -1,0 +1,88 @@
+import { useState } from 'react'
+import { Home, Calendar as CalendarIcon, Settings as SettingsIcon } from 'lucide-react'
+import HomeView from './views/Home'
+import CalendarView from './views/Calendar'
+import SettingsView from './views/Settings'
+import { useCommuteData } from './hooks/useCommuteData'
+
+function App() {
+  const [currentTab, setCurrentTab] = useState('home')
+  const commuteData = useCommuteData()
+
+  if (!commuteData.isLoaded) {
+    return null;
+  }
+
+  const renderView = () => {
+    switch (currentTab) {
+      case 'home': return <HomeView commuteData={commuteData} />
+      case 'calendar': return <CalendarView commuteData={commuteData} />
+      case 'settings': return <SettingsView commuteData={commuteData} />
+      default: return <HomeView commuteData={commuteData} />
+    }
+  }
+
+  return (
+    <>
+      <main className="main-content">
+        {renderView()}
+      </main>
+      
+      <nav className="glass-panel" style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        padding: '0.75rem 0 calc(0.75rem + var(--safe-area-bottom))',
+        zIndex: 1000
+      }}>
+        <NavItem 
+          icon={<Home size={26} />} 
+          label="Aujourd'hui" 
+          isActive={currentTab === 'home'} 
+          onClick={() => setCurrentTab('home')} 
+        />
+        <NavItem 
+          icon={<CalendarIcon size={26} />} 
+          label="Calendrier" 
+          isActive={currentTab === 'calendar'} 
+          onClick={() => setCurrentTab('calendar')} 
+        />
+        <NavItem 
+          icon={<SettingsIcon size={26} />} 
+          label="Réglages" 
+          isActive={currentTab === 'settings'} 
+          onClick={() => setCurrentTab('settings')} 
+        />
+      </nav>
+    </>
+  )
+}
+
+function NavItem({ icon, label, isActive, onClick }) {
+  return (
+    <button 
+      onClick={onClick}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)',
+        transition: 'all 0.2s ease',
+        transform: isActive ? 'translateY(-2px)' : 'none'
+      }}
+    >
+      <div style={{ marginBottom: '4px' }}>
+        {icon}
+      </div>
+      <span style={{ fontSize: '0.75rem', fontWeight: isActive ? 600 : 400 }}>
+        {label}
+      </span>
+    </button>
+  )
+}
+
+export default App
