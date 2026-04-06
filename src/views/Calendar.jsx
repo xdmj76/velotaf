@@ -16,7 +16,7 @@ export default function CalendarView({ commuteData }) {
   const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
       <header style={{ marginBottom: '1.5rem', marginTop: '1rem' }}>
         <h1 style={{ fontSize: '2rem' }}>Calendrier</h1>
         <p style={{ fontSize: '1.1rem' }}>Gérez vos jours de vélotaf</p>
