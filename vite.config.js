@@ -20,7 +20,10 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg', 'manifest.webmanifest'],
+      // manifest is handled by the static public/manifest.webmanifest file
+      // setting false disables plugin generation and avoids Vite 8/Rolldown errors
+      manifest: false,
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
     })
   ]
 })
