@@ -24,14 +24,14 @@ export default function CalendarView({ commuteData }) {
 
       <div className="card glass-panel" style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <button onClick={prevMonth} style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', background: 'var(--bg-primary)', borderRadius: '8px' }}>
-            <ChevronLeft size={20} />
+          <button onClick={prevMonth} style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)', color: 'var(--text-primary)', borderRadius: '8px' }}>
+            <ChevronLeft size={20} color="var(--text-primary)" />
           </button>
           <h2 style={{ margin: 0, textTransform: 'capitalize', fontSize: '1.25rem' }}>
             {format(currentDate, 'MMMM yyyy', { locale: fr })}
           </h2>
-          <button onClick={nextMonth} style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', background: 'var(--bg-primary)', borderRadius: '8px' }}>
-            <ChevronRight size={20} />
+          <button onClick={nextMonth} style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)', color: 'var(--text-primary)', borderRadius: '8px' }}>
+            <ChevronRight size={20} color="var(--text-primary)" />
           </button>
         </div>
 
