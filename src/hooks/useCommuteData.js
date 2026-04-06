@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { setMonth } from 'date-fns';
+import { setMonth, format } from 'date-fns';
 
 const STORAGE_KEY = 'velotaf_data';
 const SETTINGS_KEY = 'velotaf_settings';
@@ -14,15 +14,29 @@ export function useCommuteData() {
   // Load
   useEffect(() => {
     try {
+      let initialData = new Set();
       const storedData = localStorage.getItem(STORAGE_KEY);
       if (storedData) {
-        setCommutedDays(new Set(JSON.parse(storedData)));
+        initialData = new Set(JSON.parse(storedData));
       }
       
       const storedSettings = localStorage.getItem(SETTINGS_KEY);
       if (storedSettings) {
         setSettings(JSON.parse(storedSettings));
       }
+
+      // Autocheck si le lien contient ?action=add_today
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('action') === 'add_today') {
+        const todayStr = format(new Date(), 'yyyy-MM-dd');
+        initialData.add(todayStr);
+        
+        // Nettoyer l'URL proprement sans recharger
+        const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.hash;
+        window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+      }
+
+      setCommutedDays(initialData);
     } catch (e) {
       console.error("Local storage error", e);
     }
