@@ -16,6 +16,15 @@ export default defineConfig({
         theme_color: '#10b981',
         background_color: '#ffffff',
         display: 'standalone',
+        shortcuts: [
+          {
+            name: "Valider aujourd'hui",
+            short_name: "Valider",
+            description: "Enregistre le trajet du jour",
+            url: "/velotaf/?action=add_today",
+            icons: [{ src: "pwa-192x192.png", sizes: "192x192" }]
+          }
+        ],
         icons: [
           {
             src: 'pwa-192x192.png',
