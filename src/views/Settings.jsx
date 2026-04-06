@@ -143,9 +143,14 @@ export default function SettingsView({ commuteData }) {
         </div>
       </div>
 
-      <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', opacity: 0.5, fontSize: '0.75rem', gap: '0.5rem', paddingBottom: '1rem' }}>
-        <Info size={14} />
-        <span>Données stockées localement (100% privé)</span>
+      <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0.5, fontSize: '0.75rem', gap: '0.5rem', paddingBottom: '1rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <Info size={14} />
+          <span>Données stockées localement (100% privé)</span>
+        </div>
+        <div style={{ fontSize: '0.65rem' }}>
+          v{import.meta.env.APP_VERSION} — commit {import.meta.env.GIT_COMMIT}
+        </div>
       </div>
     </div>
   );
