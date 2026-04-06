@@ -30,8 +30,24 @@ export default function HistoryView({ commuteData }) {
     });
   }, [commuteData.commutedDays, start, end]);
 
-  // Génération de 7 années glissantes de choix
-  const years = Array.from({ length: 7 }, (_, i) => currentCivilYear - 3 + i).reverse();
+  // Calcul des années existantes en fonction des dates saisies
+  const availableYears = useMemo(() => {
+    const yearsSet = new Set();
+    const sMonth = commuteData.settings.periodStartMonth;
+    
+    // On ajoute toujours l'année courante au minimum
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
+    yearsSet.add(currentMonth >= sMonth ? currentYear : currentYear - 1);
+
+    commuteData.commutedDays.forEach(dateStr => {
+      const d = new Date(dateStr);
+      const refYear = d.getMonth() >= sMonth ? d.getFullYear() : d.getFullYear() - 1;
+      yearsSet.add(refYear);
+    });
+
+    return Array.from(yearsSet).sort((a, b) => b - a); // Plus récent en haut
+  }, [commuteData.commutedDays, commuteData.settings.periodStartMonth]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -57,7 +73,7 @@ export default function HistoryView({ commuteData }) {
               width: '100%'
             }}
           >
-            {years.map(y => {
+            {availableYears.map(y => {
               const startPeriod = new Date(y, commuteData.settings.periodStartMonth, 1);
               const endPeriod = new Date(y + 1, commuteData.settings.periodStartMonth, 1);
               endPeriod.setDate(0);
