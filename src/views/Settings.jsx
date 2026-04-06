@@ -51,7 +51,7 @@ export default function SettingsView({ commuteData }) {
   const currentSettings = commuteData.settings;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
       <header style={{ marginBottom: '2rem', marginTop: '1rem' }}>
         <h1 style={{ fontSize: '2rem' }}>Réglages</h1>
         <p style={{ fontSize: '1.1rem' }}>Configuration et export</p>

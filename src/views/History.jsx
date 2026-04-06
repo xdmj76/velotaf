@@ -50,7 +50,7 @@ export default function HistoryView({ commuteData }) {
   }, [commuteData.commutedDays, commuteData.settings.periodStartMonth]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
       <header style={{ marginBottom: '1.5rem', marginTop: '1rem' }}>
         <h1 style={{ fontSize: '2rem' }}>Historique</h1>
         <p style={{ fontSize: '1.1rem' }}>Vos jours déclarés en liste</p>
