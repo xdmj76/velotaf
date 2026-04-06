@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { Download, CalendarDays, Info } from 'lucide-react';
+import { Download, CalendarDays, Info, Link as LinkIcon } from 'lucide-react';
 
 export default function SettingsView({ commuteData }) {
   
@@ -120,7 +120,30 @@ export default function SettingsView({ commuteData }) {
         </button>
       </div>
 
-      <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', opacity: 0.5, fontSize: '0.75rem', gap: '0.5rem' }}>
+      <div className="card glass-panel" style={{ marginTop: '1rem' }}>
+        <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.125rem' }}>
+          <LinkIcon size={20} color="var(--accent-primary)" />
+          Validation automatique
+        </h2>
+        <p style={{ fontSize: '0.875rem', marginBottom: '1rem' }}>
+          Utilisez ce lien (dans vos favoris ou raccourcis) pour ouvrir l'application et valider instantanément la journée d'aujourd'hui :
+        </p>
+        
+        <div style={{
+          padding: '0.75rem',
+          backgroundColor: 'var(--bg-primary)',
+          borderRadius: '8px',
+          border: '1px solid var(--accent-light)',
+          fontSize: '0.875rem',
+          wordBreak: 'break-all',
+        }}>
+          <code style={{ color: 'var(--text-primary)', userSelect: 'all', fontWeight: 500 }}>
+            https://xdmj76.github.io/velotaf/?action=add_today
+          </code>
+        </div>
+      </div>
+
+      <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', opacity: 0.5, fontSize: '0.75rem', gap: '0.5rem', paddingBottom: '1rem' }}>
         <Info size={14} />
         <span>Données stockées localement (100% privé)</span>
       </div>
