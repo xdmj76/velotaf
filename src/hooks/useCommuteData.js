@@ -63,6 +63,14 @@ export function useCommuteData() {
     });
   };
 
+  const importDays = (daysArray, replace = false) => {
+    setCommutedDays(prev => {
+      const next = replace ? new Set() : new Set(prev);
+      daysArray.forEach(day => next.add(day));
+      return next;
+    });
+  };
+
   const hasCommuted = (dateStr) => commutedDays.has(dateStr);
   const updateSetting = (key, value) => setSettings(prev => ({ ...prev, [key]: value }));
 
@@ -84,6 +92,7 @@ export function useCommuteData() {
   return {
     commutedDays,
     toggleDay,
+    importDays,
     hasCommuted,
     settings,
     updateSetting,

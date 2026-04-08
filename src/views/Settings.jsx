@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { format } from 'date-fns';
-import { Download, CalendarDays, Info, Link as LinkIcon } from 'lucide-react';
+import { Download, Upload, CalendarDays, Info, Link as LinkIcon } from 'lucide-react';
 
 export default function SettingsView({ commuteData }) {
+  const [mergeData, setMergeData] = useState(true);
   
   const handleExport = () => {
     const { start, end } = commuteData.getPeriodForDate(new Date());
@@ -31,6 +33,51 @@ export default function SettingsView({ commuteData }) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleImport = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const csv = event.target.result;
+      const lines = csv.split(/\r?\n/);
+      const importedDates = [];
+
+      lines.forEach((line, index) => {
+        if (!line.trim()) return;
+        // Skip header
+        if (index === 0 && (line.toLowerCase().includes('date') || line.toLowerCase().includes('jour'))) return;
+
+        // Split by semicolon or comma
+        const [dateStr, value] = line.split(/[;,]/);
+        
+        if (dateStr && value) {
+          const trimmedDate = dateStr.trim();
+          const trimmedValue = value.trim();
+
+          // Simple regex to match YYYY-MM-DD
+          if (/^\d{4}-\d{2}-\d{2}$/.test(trimmedDate)) {
+            // We assume "Oui" or "1" means a commuted day (as per export)
+            if (trimmedValue === 'Oui' || trimmedValue === '1') {
+              importedDates.push(trimmedDate);
+            }
+          }
+        }
+      });
+
+      if (importedDates.length > 0) {
+        commuteData.importDays(importedDates, !mergeData);
+        alert(`${importedDates.length} jours vélotaf ont été ${mergeData ? 'fusionnés' : 'restaurés (écrasement)'}.`);
+      } else {
+        alert("Aucune donnée valide n'a été trouvée dans le fichier.");
+      }
+      
+      // Reset input to allow re-importing the same file
+      e.target.value = '';
+    };
+    reader.readAsText(file);
   };
 
   const months = [
@@ -118,6 +165,60 @@ export default function SettingsView({ commuteData }) {
           <Download size={20} />
           Télécharger l'export (.csv)
         </button>
+      </div>
+
+      <div className="card glass-panel" style={{ marginTop: '1rem' }}>
+        <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.125rem' }}>
+          <Upload size={20} color="var(--accent-primary)" />
+          Importation CSV (Restauration)
+        </h2>
+        <p style={{ fontSize: '0.875rem' }}>
+          Importez un fichier CSV précédemment exporté pour restaurer vos données.
+        </p>
+        
+        <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: 'var(--bg-primary)', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+          <input 
+            type="checkbox" 
+            id="merge-checkbox" 
+            checked={mergeData} 
+            onChange={(e) => setMergeData(e.target.checked)}
+            style={{ width: '1.25rem', height: '1.25rem', cursor: 'pointer', accentColor: 'var(--accent-primary)' }}
+          />
+          <label htmlFor="merge-checkbox" style={{ cursor: 'pointer', fontSize: '0.875rem' }}>
+            Fusionner avec les données existantes (décocher pour tout remplacer)
+          </label>
+        </div>
+        
+        <div style={{ marginTop: '1.5rem' }}>
+          <input 
+            type="file" 
+            id="csv-import" 
+            accept=".csv" 
+            onChange={handleImport} 
+            style={{ display: 'none' }} 
+          />
+          <button 
+            onClick={() => document.getElementById('csv-import').click()}
+            style={{
+              width: '100%',
+              padding: '1rem',
+              backgroundColor: 'transparent',
+              color: 'var(--text-primary)',
+              border: '2px dashed var(--accent-primary)',
+              borderRadius: '12px',
+              fontSize: '1rem',
+              fontWeight: 600,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '0.5rem',
+              cursor: 'pointer'
+            }}
+          >
+            <Upload size={20} />
+            Sélectionner un fichier CSV
+          </button>
+        </div>
       </div>
 
       <div className="card glass-panel" style={{ marginTop: '1rem' }}>
