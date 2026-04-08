@@ -21,8 +21,9 @@ export default function HomeView({ commuteData }) {
     }
   });
 
-  const userMetadata = commuteData.user?.user_metadata;
-  const firstName = userMetadata?.first_name || userMetadata?.full_name?.split(' ')[0] || '';
+  const user = commuteData.user;
+  const userMetadata = user?.user_metadata;
+  const firstName = userMetadata?.first_name || userMetadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
