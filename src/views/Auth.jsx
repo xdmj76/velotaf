@@ -191,8 +191,11 @@ export default function AuthView() {
         </form>
       </div>
 
-      <footer style={{ textAlign: 'center', opacity: 0.5, fontSize: '0.875rem' }}>
-        Vos données resteront accessibles même hors ligne.
+      <footer style={{ textAlign: 'center', opacity: 0.5, fontSize: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div>Vos données resteront accessibles même hors ligne.</div>
+        <div style={{ fontSize: '0.65rem' }}>
+          v{import.meta.env.APP_VERSION} — commit {import.meta.env.GIT_COMMIT}
+        </div>
       </footer>
     </div>
   )
