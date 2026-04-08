@@ -121,7 +121,7 @@ export default function SettingsView({ commuteData }) {
           <User size={20} color="var(--accent-primary)" />
           Compte
         </h2>
-        <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ marginTop: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div>
             <p style={{ fontWeight: 600, fontSize: '1rem' }}>{commuteData.user?.email}</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem', fontSize: '0.875rem', color: commuteData.syncStatus === 'error' ? 'var(--danger)' : 'var(--text-secondary)' }}>
@@ -137,14 +137,17 @@ export default function SettingsView({ commuteData }) {
           <button 
             onClick={() => supabase.auth.signOut()}
             style={{ 
-              padding: '0.5rem 1rem', 
+              width: '100%',
+              padding: '0.75rem 1rem', 
               borderRadius: '8px', 
               border: '1px solid var(--border-color)',
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: '0.5rem',
               fontSize: '0.875rem',
-              color: 'var(--danger)'
+              color: 'var(--danger)',
+              backgroundColor: 'rgba(239, 68, 68, 0.05)'
             }}
           >
             <LogOut size={16} />
@@ -154,14 +157,14 @@ export default function SettingsView({ commuteData }) {
 
         <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
           <label style={{ fontWeight: 500, fontSize: '0.875rem' }}>Mon Prénom</label>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <input 
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               placeholder="Votre prénom"
               style={{ 
-                flex: 1,
+                width: '100%',
                 padding: '0.75rem', 
                 borderRadius: '8px', 
                 border: '1px solid var(--border-color)',
@@ -174,16 +177,17 @@ export default function SettingsView({ commuteData }) {
               onClick={handleUpdateName}
               disabled={isUpdating}
               style={{ 
-                padding: '0.75rem 1rem', 
+                width: '100%',
+                padding: '0.75rem', 
                 borderRadius: '8px', 
                 backgroundColor: 'var(--accent-primary)',
                 color: 'white',
                 fontWeight: 600,
-                fontSize: '0.875rem',
+                fontSize: '1rem',
                 opacity: isUpdating ? 0.7 : 1
               }}
             >
-              Mettre à jour
+              {isUpdating ? 'Mise à jour...' : 'Mettre à jour'}
             </button>
           </div>
         </div>
