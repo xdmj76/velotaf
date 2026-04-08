@@ -4,6 +4,17 @@ import { supabase } from '../lib/supabase';
 
 export default function SettingsView({ commuteData }) {
   const [mergeData, setMergeData] = useState(true);
+  const [firstName, setFirstName] = useState(commuteData.user?.user_metadata?.first_name || '');
+  const [isUpdating, setIsUpdating] = useState(false);
+  
+  const handleUpdateName = async () => {
+    setIsUpdating(true);
+    const { error } = await supabase.auth.updateUser({
+      data: { first_name: firstName }
+    });
+    if (error) alert("Erreur lors de la mise à jour : " + error.message);
+    setIsUpdating(false);
+  };
   
   const handleExport = () => {
     const { start, end } = commuteData.getPeriodForDate(new Date());
@@ -138,6 +149,42 @@ export default function SettingsView({ commuteData }) {
             <LogOut size={16} />
             Déconnexion
           </button>
+        </div>
+
+        <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
+          <label style={{ fontWeight: 500, fontSize: '0.875rem' }}>Mon Prénom</label>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <input 
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="Votre prénom"
+              style={{ 
+                flex: 1,
+                padding: '0.75rem', 
+                borderRadius: '8px', 
+                border: '1px solid var(--border-color)',
+                backgroundColor: 'var(--bg-primary)',
+                color: 'var(--text-primary)',
+                fontSize: '1rem'
+              }}
+            />
+            <button 
+              onClick={handleUpdateName}
+              disabled={isUpdating}
+              style={{ 
+                padding: '0.75rem 1rem', 
+                borderRadius: '8px', 
+                backgroundColor: 'var(--accent-primary)',
+                color: 'white',
+                fontWeight: 600,
+                fontSize: '0.875rem',
+                opacity: isUpdating ? 0.7 : 1
+              }}
+            >
+              Mettre à jour
+            </button>
+          </div>
         </div>
       </div>
 
