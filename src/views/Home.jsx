@@ -23,12 +23,14 @@ export default function HomeView({ commuteData }) {
 
   const user = commuteData.user;
   const userMetadata = user?.user_metadata;
-  const firstName = userMetadata?.first_name || userMetadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0];
+  const firstName = userMetadata?.first_name || userMetadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || '';
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
       <header style={{ marginBottom: '2rem', marginTop: '1rem' }}>
-        <h1 style={{ fontSize: '2rem' }}>Bonjour{firstName ? ` ${firstName}` : ''},</h1>
+        <h1 style={{ fontSize: '2rem' }}>
+          Bonjour{firstName ? <span style={{ textTransform: 'capitalize' }}> {firstName}</span> : ''},
+        </h1>
         <p style={{ fontSize: '1.1rem' }}>Prêt pour pédaler aujourd'hui ?</p>
       </header>
 
