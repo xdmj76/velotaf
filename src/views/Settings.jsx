@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { format } from 'date-fns';
-import { Download, Upload, CalendarDays, Info, Link as LinkIcon } from 'lucide-react';
+import { Download, Upload, CalendarDays, Info, Link as LinkIcon, User, LogOut, Cloud, CloudOff, RefreshCw } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export default function SettingsView({ commuteData }) {
   const [mergeData, setMergeData] = useState(true);
@@ -101,8 +101,45 @@ export default function SettingsView({ commuteData }) {
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
       <header style={{ marginBottom: '2rem', marginTop: '1rem' }}>
         <h1 style={{ fontSize: '2rem' }}>Réglages</h1>
-        <p style={{ fontSize: '1.1rem' }}>Configuration et export</p>
+        <p style={{ fontSize: '1.1rem' }}>Configuration et compte</p>
       </header>
+
+      <div className="card glass-panel">
+        <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.125rem' }}>
+          <User size={20} color="var(--accent-primary)" />
+          Compte
+        </h2>
+        <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <p style={{ fontWeight: 600, fontSize: '1rem' }}>{commuteData.user?.email}</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem', fontSize: '0.875rem', color: commuteData.syncStatus === 'error' ? 'var(--danger)' : 'var(--text-secondary)' }}>
+              {commuteData.syncStatus === 'syncing' ? (
+                <><RefreshCw size={14} className="animate-spin" /> Synchronisation...</>
+              ) : commuteData.syncStatus === 'error' ? (
+                <><CloudOff size={14} /> Erreur de synchronisation</>
+              ) : (
+                <><Cloud size={14} /> Données à jour</>
+              )}
+            </div>
+          </div>
+          <button 
+            onClick={() => supabase.auth.signOut()}
+            style={{ 
+              padding: '0.5rem 1rem', 
+              borderRadius: '8px', 
+              border: '1px solid var(--border-color)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              fontSize: '0.875rem',
+              color: 'var(--danger)'
+            }}
+          >
+            <LogOut size={16} />
+            Déconnexion
+          </button>
+        </div>
+      </div>
 
       <div className="card glass-panel">
         <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.125rem' }}>
@@ -247,7 +284,7 @@ export default function SettingsView({ commuteData }) {
       <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0.5, fontSize: '0.75rem', gap: '0.5rem', paddingBottom: '1rem' }}>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Info size={14} />
-          <span>Données stockées localement (100% privé)</span>
+          <span>Données synchronisées dans le cloud</span>
         </div>
         <div style={{ fontSize: '0.65rem' }}>
           v{import.meta.env.APP_VERSION} — commit {import.meta.env.GIT_COMMIT}

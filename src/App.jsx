@@ -1,17 +1,38 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Home, Calendar as CalendarIcon, Settings as SettingsIcon, List as ListIcon } from 'lucide-react'
 import HomeView from './views/Home'
 import CalendarView from './views/Calendar'
 import SettingsView from './views/Settings'
 import HistoryView from './views/History'
+import AuthView from './views/Auth'
 import { useCommuteData } from './hooks/useCommuteData'
+import { supabase } from './lib/supabase'
 
 function App() {
   const [currentTab, setCurrentTab] = useState('home')
-  const commuteData = useCommuteData()
+  const [session, setSession] = useState(null)
+  const commuteData = useCommuteData(session)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
 
   if (!commuteData.isLoaded) {
     return null;
+  }
+
+  if (!session) {
+    return <AuthView />;
   }
 
   const renderView = () => {
