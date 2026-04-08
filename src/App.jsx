@@ -46,21 +46,19 @@ function App() {
   }
 
   return (
-    <>
+    <div className="app-container">
       <main className="main-content">
         {renderView()}
       </main>
       
       <nav className="glass-panel" style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
         display: 'flex',
         justifyContent: 'space-around',
         alignItems: 'center',
         padding: '0.75rem 0 calc(0.75rem + var(--safe-area-bottom))',
-        zIndex: 1000
+        zIndex: 1000,
+        borderTop: '1px solid var(--border-color)',
+        width: '100%'
       }}>
         <NavItem 
           icon={<Home size={26} />} 
@@ -87,7 +85,7 @@ function App() {
           onClick={() => setCurrentTab('settings')} 
         />
       </nav>
-    </>
+    </div>
   )
 }
 
