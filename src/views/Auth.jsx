@@ -16,15 +16,30 @@ export default function AuthView() {
 
     try {
       let result
+      const authOptions = {
+        email,
+        options: {
+          redirectTo: window.location.origin + window.location.pathname
+        }
+      }
+
       if (mode === 'magic') {
-        result = await supabase.auth.signInWithOtp({ email })
+        result = await supabase.auth.signInWithOtp(authOptions)
         if (result.error) throw result.error
         setMessage({ type: 'success', text: 'Lien de connexion envoyé ! Vérifiez vos emails.' })
       } else if (mode === 'login') {
-        result = await supabase.auth.signInWithPassword({ email, password })
+        result = await supabase.auth.signInWithPassword({ 
+          email, 
+          password,
+          options: authOptions.options
+        })
         if (result.error) throw result.error
       } else {
-        result = await supabase.auth.signUp({ email, password })
+        result = await supabase.auth.signUp({ 
+          email, 
+          password,
+          options: authOptions.options
+        })
         if (result.error) throw result.error
         setMessage({ type: 'success', text: 'Inscription réussie ! Vérifiez vos emails pour confirmer.' })
       }
