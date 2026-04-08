@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Bike } from 'lucide-react';
 
-export default function HomeView({ commuteData }) {
+export default function HomeView({ commuteData, onNavigate }) {
   const todayStr = format(new Date(), 'yyyy-MM-dd');
   const isCommutedToday = commuteData.hasCommuted(todayStr);
 
@@ -74,7 +74,11 @@ export default function HomeView({ commuteData }) {
         </button>
       </div>
 
-      <div className="card" style={{ marginTop: '2rem' }}>
+      <div 
+        className="card" 
+        onClick={() => onNavigate('calendar')}
+        style={{ marginTop: '2rem', cursor: 'pointer', transition: 'transform 0.2s', ':hover': { transform: 'translateY(-2px)' } }}
+      >
         <h2 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Résumé de la période</h2>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <span style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent-primary)', lineHeight: 1 }}>

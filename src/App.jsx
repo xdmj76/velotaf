@@ -37,11 +37,11 @@ function App() {
 
   const renderView = () => {
     switch (currentTab) {
-      case 'home': return <HomeView commuteData={commuteData} />
+      case 'home': return <HomeView commuteData={commuteData} onNavigate={(tab) => setCurrentTab(tab)} />
       case 'list': return <HistoryView commuteData={commuteData} />
       case 'calendar': return <CalendarView commuteData={commuteData} />
       case 'settings': return <SettingsView commuteData={commuteData} />
-      default: return <HomeView commuteData={commuteData} />
+      default: return <HomeView commuteData={commuteData} onNavigate={(tab) => setCurrentTab(tab)} />
     }
   }
 
