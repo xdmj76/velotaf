@@ -9,11 +9,16 @@ export default function SettingsView({ commuteData }) {
   const [isUpdating, setIsUpdating] = useState(false);
   
   const handleUpdateName = async () => {
+    if (firstName === (commuteData.user?.user_metadata?.first_name || '')) return;
+    
     setIsUpdating(true);
     const { error } = await supabase.auth.updateUser({
       data: { first_name: firstName }
     });
-    if (error) alert("Erreur lors de la mise à jour : " + error.message);
+    
+    if (error) {
+      alert("Erreur lors de la mise à jour : " + error.message);
+    }
     setIsUpdating(false);
   };
   
@@ -157,39 +162,23 @@ export default function SettingsView({ commuteData }) {
 
         <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
           <label style={{ fontWeight: 500, fontSize: '0.875rem' }}>Mon Prénom</label>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <input 
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="Votre prénom"
-              style={{ 
-                width: '100%',
-                padding: '0.75rem', 
-                borderRadius: '8px', 
-                border: '1px solid var(--border-color)',
-                backgroundColor: 'var(--bg-primary)',
-                color: 'var(--text-primary)',
-                fontSize: '1rem'
-              }}
-            />
-            <button 
-              onClick={handleUpdateName}
-              disabled={isUpdating}
-              style={{ 
-                width: '100%',
-                padding: '0.75rem', 
-                borderRadius: '8px', 
-                backgroundColor: 'var(--accent-primary)',
-                color: 'white',
-                fontWeight: 600,
-                fontSize: '1rem',
-                opacity: isUpdating ? 0.7 : 1
-              }}
-            >
-              {isUpdating ? 'Mise à jour...' : 'Mettre à jour'}
-            </button>
-          </div>
+          <input 
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            onBlur={handleUpdateName}
+            onKeyDown={(e) => e.key === 'Enter' && handleUpdateName()}
+            placeholder="Votre prénom"
+            style={{ 
+              width: '100%',
+              padding: '0.75rem', 
+              borderRadius: '8px', 
+              border: '1px solid var(--border-color)',
+              backgroundColor: 'var(--bg-primary)',
+              color: 'var(--text-primary)',
+              fontSize: '1rem'
+            }}
+          />
         </div>
       </div>
 
