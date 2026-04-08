@@ -12,6 +12,7 @@ export function useCommuteData(session) {
   });
   const [isLoaded, setIsLoaded] = useState(false);
   const [syncStatus, setSyncStatus] = useState('idle'); // 'idle', 'syncing', 'error'
+  const [notification, setNotification] = useState(null); // { message: string, type: 'error' | 'success' }
 
   const user = session?.user;
 
@@ -122,6 +123,7 @@ export function useCommuteData(session) {
   // Actions
   const toggleDay = async (dateStr) => {
     const isAdding = !commutedDays.has(dateStr);
+    const previousDays = new Set(commutedDays);
     
     // Optimistic Update
     setCommutedDays(prev => {
@@ -133,14 +135,24 @@ export function useCommuteData(session) {
 
     if (user) {
       try {
+        let result;
         if (isAdding) {
-          await supabase.from('rides').insert({ user_id: user.id, ride_date: dateStr });
+          result = await supabase.from('rides').insert({ user_id: user.id, ride_date: dateStr });
         } else {
-          await supabase.from('rides').delete().eq('user_id', user.id).eq('ride_date', dateStr);
+          result = await supabase.from('rides').delete().eq('user_id', user.id).eq('ride_date', dateStr);
         }
+        
+        if (result.error) throw result.error;
+        setSyncStatus('idle');
       } catch (e) {
         console.error("Cloud toggle error", e);
         setSyncStatus('error');
+        // Rollback
+        setCommutedDays(previousDays);
+        setNotification({ 
+          message: isAdding ? "Échec de l'ajout (Problème de connexion)" : "Échec de la suppression (Problème de connexion)", 
+          type: 'error' 
+        });
       }
     }
   };
@@ -168,16 +180,23 @@ export function useCommuteData(session) {
   const hasCommuted = (dateStr) => commutedDays.has(dateStr);
   
   const updateSetting = async (key, value) => {
+    const previousSettings = { ...settings };
     setSettings(prev => ({ ...prev, [key]: value }));
     
     if (user && key === 'periodStartMonth') {
       try {
-        await supabase.from('settings').upsert({ 
+        const { error } = await supabase.from('settings').upsert({ 
           user_id: user.id, 
           period_start_month: value 
         });
+        if (error) throw error;
+        setSyncStatus('idle');
       } catch (e) {
         console.error("Cloud setting update error", e);
+        // Rollback
+        setSettings(previousSettings);
+        setSyncStatus('error');
+        setNotification({ message: "Échec de la mise à jour des réglages", type: 'error' });
       }
     }
   };
@@ -202,6 +221,8 @@ export function useCommuteData(session) {
     getPeriodForDate,
     isLoaded,
     syncStatus,
+    notification,
+    clearNotification: () => setNotification(null),
     user
   };
 }

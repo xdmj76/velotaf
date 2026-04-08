@@ -5,6 +5,7 @@ import CalendarView from './views/Calendar'
 import SettingsView from './views/Settings'
 import HistoryView from './views/History'
 import AuthView from './views/Auth'
+import Toast from './components/Toast'
 import { useCommuteData } from './hooks/useCommuteData'
 import { supabase } from './lib/supabase'
 
@@ -47,6 +48,14 @@ function App() {
 
   return (
     <div className="app-container">
+      {commuteData.notification && (
+        <Toast 
+          message={commuteData.notification.message} 
+          type={commuteData.notification.type} 
+          onClose={commuteData.clearNotification} 
+        />
+      )}
+      
       <main className="main-content">
         {renderView()}
       </main>
