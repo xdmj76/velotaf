@@ -19,7 +19,7 @@ export default function AuthView() {
       const authOptions = {
         email,
         options: {
-          redirectTo: window.location.origin + window.location.pathname
+          redirectTo: window.location.origin + (import.meta.env.BASE_URL || '/')
         }
       }
 
