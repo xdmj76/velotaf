@@ -28,15 +28,15 @@ export default function AuthView() {
         if (result.error) throw result.error
         setMessage({ type: 'success', text: 'Lien de connexion envoyé ! Vérifiez vos emails.' })
       } else if (mode === 'login') {
-        result = await supabase.auth.signInWithPassword({ 
-          email, 
+        result = await supabase.auth.signInWithPassword({
+          email,
           password,
           options: authOptions.options
         })
         if (result.error) throw result.error
       } else {
-        result = await supabase.auth.signUp({ 
-          email, 
+        result = await supabase.auth.signUp({
+          email,
           password,
           options: authOptions.options
         })
@@ -51,10 +51,10 @@ export default function AuthView() {
   }
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      justifyContent: 'center', 
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
       minHeight: '100vh',
       padding: '1.5rem',
       gap: '2rem'
@@ -66,10 +66,10 @@ export default function AuthView() {
 
       <div className="card glass-panel" style={{ padding: '2rem' }}>
         <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
-          <button 
+          <button
             onClick={() => { setMode('login'); setMessage(null); }}
-            style={{ 
-              background: 'none', 
+            style={{
+              background: 'none',
               color: mode === 'login' ? 'var(--accent-primary)' : 'var(--text-secondary)',
               fontWeight: mode === 'login' ? 600 : 400,
               padding: '0.5rem 0',
@@ -78,10 +78,10 @@ export default function AuthView() {
           >
             Connexion
           </button>
-          <button 
+          <button
             onClick={() => { setMode('magic'); setMessage(null); }}
-            style={{ 
-              background: 'none', 
+            style={{
+              background: 'none',
               color: mode === 'magic' ? 'var(--accent-primary)' : 'var(--text-secondary)',
               fontWeight: mode === 'magic' ? 600 : 400,
               padding: '0.5rem 0',
@@ -90,10 +90,10 @@ export default function AuthView() {
           >
             Lien magique
           </button>
-          <button 
+          <button
             onClick={() => { setMode('signup'); setMessage(null); }}
-            style={{ 
-              background: 'none', 
+            style={{
+              background: 'none',
               color: mode === 'signup' ? 'var(--accent-primary)' : 'var(--text-secondary)',
               fontWeight: mode === 'signup' ? 600 : 400,
               padding: '0.5rem 0',
@@ -109,14 +109,14 @@ export default function AuthView() {
             <label style={{ fontSize: '0.875rem', fontWeight: 500 }}>Email</label>
             <div style={{ position: 'relative' }}>
               <Mail size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }} />
-              <input 
-                type="email" 
-                required 
+              <input
+                type="email"
+                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="votre@email.com"
-                style={{ 
-                  width: '100%', 
+                style={{
+                  width: '100%',
                   padding: '0.75rem 1rem 0.75rem 2.5rem',
                   borderRadius: '10px',
                   border: '1px solid var(--border-color)',
@@ -132,14 +132,14 @@ export default function AuthView() {
               <label style={{ fontSize: '0.875rem', fontWeight: 500 }}>Mot de passe</label>
               <div style={{ position: 'relative' }}>
                 <Lock size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }} />
-                <input 
-                  type="password" 
-                  required 
+                <input
+                  type="password"
+                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  style={{ 
-                    width: '100%', 
+                  style={{
+                    width: '100%',
                     padding: '0.75rem 1rem 0.75rem 2.5rem',
                     borderRadius: '10px',
                     border: '1px solid var(--border-color)',
@@ -152,9 +152,9 @@ export default function AuthView() {
           )}
 
           {message && (
-            <div style={{ 
-              padding: '0.75rem', 
-              borderRadius: '8px', 
+            <div style={{
+              padding: '0.75rem',
+              borderRadius: '8px',
               fontSize: '0.875rem',
               backgroundColor: message.type === 'error' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)',
               color: message.type === 'error' ? '#ef4444' : '#10b981',
@@ -164,8 +164,8 @@ export default function AuthView() {
             </div>
           )}
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={loading}
             style={{
               marginTop: '1rem',
@@ -191,11 +191,8 @@ export default function AuthView() {
         </form>
       </div>
 
-      <footer style={{ textAlign: 'center', opacity: 0.5, fontSize: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <div>Vos données resteront accessibles même hors ligne.</div>
-        <div style={{ fontSize: '0.65rem' }}>
-          v{import.meta.env.APP_VERSION} — commit {import.meta.env.GIT_COMMIT}
-        </div>
+      <footer style={{ textAlign: 'center', opacity: 0.5, fontSize: '0.875rem' }}>
+        Vos données resteront accessibles même hors ligne.
       </footer>
     </div>
   )
