@@ -6,11 +6,10 @@ export default function HistoryView({ commuteData }) {
   // Calcul de base pour l'année courante en fonction de la période qui se chevauche
   const currentCivilYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth();
-  
+
   // Par défaut, l'année sélectionnée correspond à l'année de départ de la période actuelle
-  const initialYear = currentMonth >= commuteData.settings.periodStartMonth 
-    ? currentCivilYear 
-    : currentCivilYear - 1;
+  const initialYear =
+    currentMonth >= commuteData.settings.periodStartMonth ? currentCivilYear : currentCivilYear - 1;
 
   const [selectedYear, setSelectedYear] = useState(initialYear);
 
@@ -24,7 +23,7 @@ export default function HistoryView({ commuteData }) {
 
   const datesInPeriod = useMemo(() => {
     let dates = [...commuteData.commutedDays].sort((a, b) => new Date(b) - new Date(a)); // Tri descendant (plus récent en haut)
-    return dates.filter(dateStr => {
+    return dates.filter((dateStr) => {
       const d = new Date(dateStr);
       return d >= start && d <= end;
     });
@@ -34,13 +33,13 @@ export default function HistoryView({ commuteData }) {
   const availableYears = useMemo(() => {
     const yearsSet = new Set();
     const sMonth = commuteData.settings.periodStartMonth;
-    
+
     // On ajoute toujours l'année courante au minimum
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth();
     yearsSet.add(currentMonth >= sMonth ? currentYear : currentYear - 1);
 
-    commuteData.commutedDays.forEach(dateStr => {
+    commuteData.commutedDays.forEach((dateStr) => {
       const d = new Date(dateStr);
       const refYear = d.getMonth() >= sMonth ? d.getFullYear() : d.getFullYear() - 1;
       yearsSet.add(refYear);
@@ -56,33 +55,39 @@ export default function HistoryView({ commuteData }) {
         <p style={{ fontSize: '1.1rem' }}>Vos jours déclarés en liste</p>
       </header>
 
-      <div className="card glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div
+        className="card glass-panel"
+        style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+      >
         <div>
-          <label style={{ fontWeight: 500, fontSize: '0.875rem' }}>Période (Année de référence)</label>
-          <select 
+          <label style={{ fontWeight: 500, fontSize: '0.875rem' }}>
+            Période (Année de référence)
+          </label>
+          <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-            style={{ 
+            style={{
               marginTop: '0.5rem',
-              padding: '0.75rem', 
-              borderRadius: '8px', 
+              padding: '0.75rem',
+              borderRadius: '8px',
               border: '1px solid var(--border-color)',
               backgroundColor: 'var(--bg-primary)',
               color: 'var(--text-primary)',
               fontSize: '1rem',
-              width: '100%'
+              width: '100%',
             }}
           >
-            {availableYears.map(y => {
+            {availableYears.map((y) => {
               const startPeriod = new Date(y, commuteData.settings.periodStartMonth, 1);
               const endPeriod = new Date(y + 1, commuteData.settings.periodStartMonth, 1);
               endPeriod.setDate(0);
-              
+
               // Affichage du libellé personnalisé selon les dates
-              const label = format(startPeriod, 'yyyy') === format(endPeriod, 'yyyy')
-                ? `Année ${format(startPeriod, 'yyyy')}`
-                : `${format(startPeriod, 'MMM yyyy', { locale: fr })} - ${format(endPeriod, 'MMM yyyy', { locale: fr })}`;
-                
+              const label =
+                format(startPeriod, 'yyyy') === format(endPeriod, 'yyyy')
+                  ? `Année ${format(startPeriod, 'yyyy')}`
+                  : `${format(startPeriod, 'MMM yyyy', { locale: fr })} - ${format(endPeriod, 'MMM yyyy', { locale: fr })}`;
+
               return (
                 <option key={y} value={y} style={{ textTransform: 'capitalize' }}>
                   {label}
@@ -94,29 +99,44 @@ export default function HistoryView({ commuteData }) {
       </div>
 
       <div className="card glass-panel" style={{ flex: 1, overflowY: 'auto' }}>
-        <h2 style={{ fontSize: '1.125rem', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2
+          style={{
+            fontSize: '1.125rem',
+            marginBottom: '1rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <span>Jours enregistrés</span>
-          <span style={{ color: 'var(--accent-primary)', fontSize: '1.5rem', fontWeight: 800 }}>{datesInPeriod.length}</span>
+          <span style={{ color: 'var(--accent-primary)', fontSize: '1.5rem', fontWeight: 800 }}>
+            {datesInPeriod.length}
+          </span>
         </h2>
-        
+
         {datesInPeriod.length === 0 ? (
-          <p style={{ textAlign: 'center', opacity: 0.5, marginTop: '2rem' }}>Aucune donnée pour cette période</p>
+          <p style={{ textAlign: 'center', opacity: 0.5, marginTop: '2rem' }}>
+            Aucune donnée pour cette période
+          </p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            {datesInPeriod.map(dateStr => (
-              <div key={dateStr} style={{ 
-                padding: '0.75rem 1rem', 
-                backgroundColor: 'var(--bg-primary)', 
-                borderRadius: '8px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                border: '1px solid var(--border-color)'
-              }}>
+            {datesInPeriod.map((dateStr) => (
+              <div
+                key={dateStr}
+                style={{
+                  padding: '0.75rem 1rem',
+                  backgroundColor: 'var(--bg-primary)',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  border: '1px solid var(--border-color)',
+                }}
+              >
                 <span style={{ fontWeight: 500, textTransform: 'capitalize' }}>
                   {format(new Date(dateStr), 'EEEE d MMMM yyyy', { locale: fr })}
                 </span>
-                <button 
+                <button
                   onClick={() => commuteData.toggleDay(dateStr)}
                   style={{ color: 'var(--danger)', fontSize: '0.875rem', fontWeight: 600 }}
                 >
