@@ -21,6 +21,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'inline',
       // manifest is handled by the static public/manifest.webmanifest file
       // setting false disables plugin generation and avoids Vite 8/Rolldown errors
       manifest: false,
