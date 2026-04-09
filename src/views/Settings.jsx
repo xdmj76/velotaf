@@ -339,7 +339,7 @@ export default function SettingsView({ commuteData }) {
           borderRadius: '4px',
           fontFamily: 'monospace'
         }}>
-          Auth Redirect URL: {window.location.origin + (import.meta.env.BASE_URL || '/')}
+          Auth Redirect URL (email): {window.location.origin + (import.meta.env.BASE_URL || '/')}
         </div>
       </div>
     </div>

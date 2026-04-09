@@ -19,9 +19,11 @@ export default function AuthView() {
       const authOptions = {
         email,
         options: {
-          redirectTo: window.location.origin + (import.meta.env.BASE_URL || '/')
+          emailRedirectTo: window.location.origin + (import.meta.env.BASE_URL || '/')
         }
       }
+
+      console.log(authOptions)
 
       if (mode === 'magic') {
         result = await supabase.auth.signInWithOtp(authOptions)
@@ -196,16 +198,16 @@ export default function AuthView() {
         <div style={{ fontSize: '0.65rem' }}>
           v{import.meta.env.APP_VERSION} — commit {import.meta.env.GIT_COMMIT}
         </div>
-        <div style={{ 
-          fontSize: '0.65rem', 
-          marginTop: '0.5rem', 
-          padding: '0.5rem', 
-          backgroundColor: 'rgba(255, 255, 255, 0.03)', 
+        <div style={{
+          fontSize: '0.65rem',
+          marginTop: '0.5rem',
+          padding: '0.5rem',
+          backgroundColor: 'rgba(255, 255, 255, 0.03)',
           border: '1px dashed rgba(255, 255, 255, 0.1)',
           borderRadius: '4px',
           fontFamily: 'monospace'
         }}>
-          Redirect URL: {window.location.origin + (import.meta.env.BASE_URL || '/')}
+          Auth Redirect URL (email): {window.location.origin + (import.meta.env.BASE_URL || '/')}
         </div>
       </footer>
     </div>
