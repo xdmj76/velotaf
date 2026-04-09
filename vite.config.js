@@ -14,7 +14,7 @@ try {
 export default defineConfig({
   base: '/velotaf/',
   define: {
-    'import.meta.env.APP_VERSION': JSON.stringify('0.1.0'),
+    'import.meta.env.APP_VERSION': JSON.stringify('0.1.1'),
     'import.meta.env.GIT_COMMIT': JSON.stringify(commitHash),
   },
   plugins: [
