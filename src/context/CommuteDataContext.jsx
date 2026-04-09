@@ -6,11 +6,7 @@ const CommuteDataContext = createContext(null);
 export function CommuteProvider({ children, session }) {
   const commuteData = useCommuteData(session);
 
-  return (
-    <CommuteDataContext.Provider value={commuteData}>
-      {children}
-    </CommuteDataContext.Provider>
-  );
+  return <CommuteDataContext.Provider value={commuteData}>{children}</CommuteDataContext.Provider>;
 }
 
 export function useCommute() {
