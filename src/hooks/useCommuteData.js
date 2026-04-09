@@ -93,6 +93,14 @@ export function useCommuteData(session) {
 
         if (settingsData) {
           setSettings({ periodStartMonth: settingsData.period_start_month });
+        } else if (settingsError?.code === 'PGRST116') {
+          // If settings are missing in cloud, sync local settings
+          supabase.from('settings').upsert({ 
+            user_id: user.id, 
+            period_start_month: settings.periodStartMonth 
+          }).then(({ error }) => {
+            if (error) console.error("Error syncing settings to cloud:", error);
+          });
         }
         setSyncStatus('idle');
       } catch (error) {
@@ -103,22 +111,6 @@ export function useCommuteData(session) {
 
     fetchCloudData();
   }, [user, isLoaded]);
-
-  // Sync helpers
-  const migrateLocalToCloud = async (userId, dates, currentSettings) => {
-    try {
-      if (dates.length > 0) {
-        const ridesToInsert = dates.map(date => ({ user_id: userId, ride_date: date }));
-        await supabase.from('rides').insert(ridesToInsert);
-      }
-      await supabase.from('settings').upsert({ 
-        user_id: userId, 
-        period_start_month: currentSettings.periodStartMonth 
-      });
-    } catch (e) {
-      console.error("Migration error", e);
-    }
-  };
 
   // Local Save
   useEffect(() => {
