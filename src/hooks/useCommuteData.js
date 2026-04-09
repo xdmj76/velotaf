@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import { supabase } from '../lib/supabase';
 
 const STORAGE_KEY = 'velotaf_data';
@@ -13,6 +14,7 @@ export function useCommuteData(session) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [syncStatus, setSyncStatus] = useState('idle'); // 'idle', 'syncing', 'error'
   const [notification, setNotification] = useState(null); // { message: string, type: 'error' | 'success' }
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, dateStr: null });
 
   const user = session?.user;
 
@@ -130,8 +132,7 @@ export function useCommuteData(session) {
   }, [settings, isLoaded]);
 
   // Actions
-  const toggleDay = async (dateStr) => {
-    const isAdding = !commutedDays.has(dateStr);
+  const executeToggle = async (dateStr, isAdding) => {
     const previousDays = new Set(commutedDays);
     
     // Optimistic Update
@@ -164,6 +165,29 @@ export function useCommuteData(session) {
         });
       }
     }
+  };
+
+  const toggleDay = async (dateStr) => {
+    const isAdding = !commutedDays.has(dateStr);
+    
+    if (!isAdding) {
+      setConfirmModal({ isOpen: true, dateStr });
+      return;
+    }
+
+    await executeToggle(dateStr, true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (confirmModal.dateStr) {
+      const dateToToggle = confirmModal.dateStr;
+      setConfirmModal({ isOpen: false, dateStr: null });
+      await executeToggle(dateToToggle, false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmModal({ isOpen: false, dateStr: null });
   };
 
   const importDays = async (daysArray, replace = false) => {
@@ -232,6 +256,9 @@ export function useCommuteData(session) {
     syncStatus,
     notification,
     clearNotification: () => setNotification(null),
+    confirmModal,
+    handleConfirmDelete,
+    handleCancelDelete,
     user
   };
 }

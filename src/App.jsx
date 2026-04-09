@@ -6,8 +6,11 @@ import SettingsView from './views/Settings'
 import HistoryView from './views/History'
 import AuthView from './views/Auth'
 import Toast from './components/Toast'
+import ConfirmDialog from './components/ConfirmDialog'
 import { useCommuteData } from './hooks/useCommuteData'
 import { supabase } from './lib/supabase'
+import { format } from 'date-fns'
+import { fr } from 'date-fns/locale'
 
 function App() {
   const [currentTab, setCurrentTab] = useState('home')
@@ -55,6 +58,14 @@ function App() {
           onClose={commuteData.clearNotification} 
         />
       )}
+
+      <ConfirmDialog 
+        isOpen={commuteData.confirmModal.isOpen}
+        title="Supprimer la journée ?"
+        message={`Voulez-vous vraiment retirer la journée du ${commuteData.confirmModal.dateStr ? format(new Date(commuteData.confirmModal.dateStr), 'EEEE d MMMM', { locale: fr }) : ''} ?`}
+        onConfirm={commuteData.handleConfirmDelete}
+        onCancel={commuteData.handleCancelDelete}
+      />
       
       <main className="main-content">
         {renderView()}
