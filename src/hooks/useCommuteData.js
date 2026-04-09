@@ -72,16 +72,25 @@ export function useCommuteData(session) {
 
         const cloudDates = new Set(rides.map(r => r.ride_date));
         
-        // Merge or replace? 
-        // Strategy: If cloud is empty and local is not, migrate local to cloud.
-        // If cloud has data, cloud wins.
-        if (cloudDates.size === 0 && commutedDays.size > 0) {
-          await migrateLocalToCloud(user.id, [...commutedDays], settings);
-        } else if (cloudDates.size > 0) {
-          setCommutedDays(cloudDates);
-          if (settingsData) {
-            setSettings({ periodStartMonth: settingsData.period_start_month });
+        // Merge strategy: combine cloud and local state (e.g. from ?action=add_today)
+        setCommutedDays(prev => {
+          const merged = new Set([...cloudDates, ...prev]);
+          
+          // If we have new local dates not in cloud, sync them
+          const newLocalDates = Array.from(merged).filter(d => !cloudDates.has(d));
+          if (newLocalDates.length > 0) {
+            supabase.from('rides').insert(
+              newLocalDates.map(d => ({ user_id: user.id, ride_date: d }))
+            ).then(({ error }) => {
+              if (error) console.error("Error syncing local action to cloud:", error);
+            });
           }
+          
+          return merged;
+        });
+
+        if (settingsData) {
+          setSettings({ periodStartMonth: settingsData.period_start_month });
         }
         setSyncStatus('idle');
       } catch (error) {
