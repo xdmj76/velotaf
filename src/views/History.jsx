@@ -1,8 +1,11 @@
 import { useState, useMemo } from 'react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { useCommute } from '../context/CommuteDataContext';
 
-export default function HistoryView({ commuteData }) {
+export default function HistoryView() {
+  const commuteData = useCommute();
+
   // Calcul de base pour l'année courante en fonction de la période qui se chevauche
   const currentCivilYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth();

@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { useCommute } from '../context/CommuteDataContext';
 
-export default function SettingsView({ commuteData }) {
+export default function SettingsView() {
+  const commuteData = useCommute();
+
   const [mergeData, setMergeData] = useState(true);
   const [firstName, setFirstName] = useState(commuteData.user?.user_metadata?.first_name || '');
   const [isUpdating, setIsUpdating] = useState(false);

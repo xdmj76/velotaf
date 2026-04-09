@@ -1,8 +1,11 @@
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { Bike } from 'lucide-react';
+import { useCommute } from '../context/CommuteDataContext';
 
-export default function HomeView({ commuteData, onNavigate }) {
+export default function HomeView({ onNavigate }) {
+  const commuteData = useCommute();
+
   const todayStr = format(new Date(), 'yyyy-MM-dd');
   const isCommutedToday = commuteData.hasCommuted(todayStr);
 

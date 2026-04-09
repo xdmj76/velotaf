@@ -14,8 +14,11 @@ import {
 } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useCommute } from '../context/CommuteDataContext';
 
-export default function CalendarView({ commuteData }) {
+export default function CalendarView() {
+  const commuteData = useCommute();
+
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const days = useMemo(() => {

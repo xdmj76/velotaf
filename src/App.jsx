@@ -12,7 +12,7 @@ import HistoryView from './views/History';
 import AuthView from './views/Auth';
 import Toast from './components/Toast';
 import ConfirmDialog from './components/ConfirmDialog';
-import { useCommuteData } from './hooks/useCommuteData';
+import { CommuteProvider, useCommute } from './context/CommuteDataContext';
 import { supabase } from './lib/supabase';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -20,7 +20,6 @@ import { fr } from 'date-fns/locale';
 function App() {
   const [currentTab, setCurrentTab] = useState('home');
   const [session, setSession] = useState(null);
-  const commuteData = useCommuteData(session);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -36,26 +35,36 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (!commuteData.isLoaded) {
-    return null;
-  }
-
   if (!session) {
     return <AuthView />;
+  }
+
+  return (
+    <CommuteProvider session={session}>
+      <AppContent currentTab={currentTab} setCurrentTab={setCurrentTab} />
+    </CommuteProvider>
+  );
+}
+
+function AppContent({ currentTab, setCurrentTab }) {
+  const commuteData = useCommute();
+
+  if (!commuteData.isLoaded) {
+    return null;
   }
 
   const renderView = () => {
     switch (currentTab) {
       case 'home':
-        return <HomeView commuteData={commuteData} onNavigate={(tab) => setCurrentTab(tab)} />;
+        return <HomeView onNavigate={(tab) => setCurrentTab(tab)} />;
       case 'list':
-        return <HistoryView commuteData={commuteData} />;
+        return <HistoryView />;
       case 'calendar':
-        return <CalendarView commuteData={commuteData} />;
+        return <CalendarView />;
       case 'settings':
-        return <SettingsView commuteData={commuteData} />;
+        return <SettingsView />;
       default:
-        return <HomeView commuteData={commuteData} onNavigate={(tab) => setCurrentTab(tab)} />;
+        return <HomeView onNavigate={(tab) => setCurrentTab(tab)} />;
     }
   };
 

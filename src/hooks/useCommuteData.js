@@ -57,6 +57,9 @@ export function useCommuteData(session) {
     if (!user || !isLoaded) return;
 
     const fetchCloudData = async () => {
+      // Avoid redundant calls if already syncing
+      if (syncStatus === 'syncing') return;
+
       setSyncStatus('syncing');
       try {
         // Fetch rides
@@ -97,7 +100,10 @@ export function useCommuteData(session) {
         });
 
         if (settingsData) {
-          setSettings({ periodStartMonth: settingsData.period_start_month });
+          setSettings((prev) => {
+            if (prev.periodStartMonth === settingsData.period_start_month) return prev;
+            return { ...prev, periodStartMonth: settingsData.period_start_month };
+          });
         } else if (settingsError?.code === 'PGRST116') {
           // If settings are missing in cloud, sync local settings
           supabase
@@ -118,7 +124,7 @@ export function useCommuteData(session) {
     };
 
     fetchCloudData();
-  }, [user, isLoaded, settings.periodStartMonth]);
+  }, [user?.id, isLoaded]);
 
   // Local Save
   useEffect(() => {
